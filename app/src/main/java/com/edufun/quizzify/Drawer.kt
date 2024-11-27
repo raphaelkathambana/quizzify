@@ -14,14 +14,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.DragHandle
 import androidx.compose.material.icons.outlined.Logout
+import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Text
@@ -49,7 +50,7 @@ fun AppBar(drawerState: DrawerState, modifier: Modifier = Modifier) {
     Row(modifier = modifier
         .fillMaxWidth()
         .background(Purple40),
-        horizontalArrangement = Arrangement.SpaceBetween
+//        horizontalArrangement = Arrangement.SpaceBetween
 
     ) {
         IconButton(
@@ -59,18 +60,23 @@ fun AppBar(drawerState: DrawerState, modifier: Modifier = Modifier) {
                 }
             }) {
             Icon(
-                Icons.Outlined.DragHandle,
+                Icons.Outlined.Menu,
                 tint = Color.White,
                 contentDescription = null,
                 modifier = Modifier.size(25.dp),
             )
         }
+        Text(
+            text = "Quizzify",
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier.padding(10.dp)
+        )
     }
 }
 
 // Drawer
 @Composable
-fun DrawerTab(onQuizSelected: (String) -> Unit, onLogout: () -> Unit) {
+fun DrawerTab(onQuizSelected: (String) -> Unit, onLogout: () -> Unit, onProfile: () -> Unit) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val dockerWidth = LocalConfiguration.current.screenWidthDp * 0.75
 
@@ -107,7 +113,7 @@ fun DrawerTab(onQuizSelected: (String) -> Unit, onLogout: () -> Unit) {
                 ) {
                     item {
                         TextButton(
-                            onClick = onLogout,
+                            onClick = onProfile,
                         ) {
                             Row {
                                 Icon(
@@ -188,7 +194,6 @@ fun DrawerTab(onQuizSelected: (String) -> Unit, onLogout: () -> Unit) {
             AppBar(drawerState)
             MenuScreen(
                 onQuizSelected = onQuizSelected,
-                onLogout = onLogout
             )
         }
     }

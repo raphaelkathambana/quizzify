@@ -25,7 +25,7 @@ import com.edufun.quizzify.ui.theme.Purple40
 
 // Menu
 @Composable
-fun MenuScreen(onQuizSelected: (String) -> Unit, onLogout: () -> Unit) {
+fun MenuScreen(onQuizSelected: (String) -> Unit) {
     val allList = allList()
 //    val availableQuizzes = listOf("General Knowledge", "Math Quiz", "Science Quiz")
 //    val availableImages = listOf(painterResource(R.drawable.GN), painterResource(R.drawable.M), painterResource(R.drawable.S))
@@ -36,19 +36,19 @@ fun MenuScreen(onQuizSelected: (String) -> Unit, onLogout: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Purple40),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "Welcome to Quizzify",
-                style = MaterialTheme.typography.headlineLarge,
-                modifier = Modifier.padding(bottom = 20.dp)
-            )
-        }
+//        Column(
+//            modifier = Modifier
+//                .fillMaxWidth(),
+////                .background(Purple40),
+//            horizontalAlignment = Alignment.CenterHorizontally,
+//            verticalArrangement = Arrangement.Center
+//        ) {
+//            Text(
+//                text = "Welcome to Quizzify",
+//                style = MaterialTheme.typography.headlineLarge,
+//                modifier = Modifier.padding(bottom = 20.dp)
+//            )
+//        }
 
 
         LazyColumn(
@@ -83,14 +83,6 @@ fun MenuScreen(onQuizSelected: (String) -> Unit, onLogout: () -> Unit) {
                 }
 
             }
-        }
-        Button(
-            onClick = onLogout,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        ) {
-            Text(text = "Logout")
         }
     }
 }

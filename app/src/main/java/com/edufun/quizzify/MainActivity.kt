@@ -39,6 +39,7 @@ sealed class AppScreen {
     object Quiz : AppScreen()
     object Login : AppScreen()
     object Register : AppScreen()
+    object Profile : AppScreen()
 }
 @Composable
 fun AppNavigator(viewModel: QuizViewModel = viewModel()) {
@@ -62,12 +63,24 @@ fun AppNavigator(viewModel: QuizViewModel = viewModel()) {
                     viewModel.loadQuiz(quizName)
                     currentScreen = AppScreen.Quiz
                 },
-                onLogout = { currentScreen = AppScreen.Login }
+                onLogout = { currentScreen = AppScreen.Login },
+                onProfile = { currentScreen = AppScreen.Profile}
             )
             is AppScreen.Quiz -> QuizApp(
                 viewModel = viewModel,
                 onQuitQuiz = { currentScreen = AppScreen.Menu }
             )
+            is AppScreen.Profile -> ProfileScreen(
+                    name = "John Doe",
+                    profileImage = R.drawable.image,
+                    quizHistory = listOf(
+                        "Math Quiz - 80%",
+                        "Science Quiz - 95%",
+                        "History Quiz - 70%"
+                    ),
+                onMenu = { currentScreen = AppScreen.Menu}
+
+                )
         }
     }
 }
