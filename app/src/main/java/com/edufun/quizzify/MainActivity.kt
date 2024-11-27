@@ -13,8 +13,10 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.DragHandle
@@ -371,68 +373,62 @@ fun LoginScreen(onLogin: () -> Unit, onRegisterNavigate: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Image(
+            painter = painterResource(R.drawable.logo),
+            contentScale = ContentScale.FillWidth,
+            contentDescription = null,
+            alignment = Alignment.TopStart,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(shape = RoundedCornerShape(7.dp))
+        )
         Text(
             text = "Login",
+            color = Color.Yellow,
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.padding(bottom = 24.dp)
         )
-
-        BasicTextField(
+        TextField(
             value = email,
             onValueChange = { email = it },
+            singleLine = true,
+            label = { Text("Email Address") },
+            placeholder = { Text("example@domain.com") },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            textStyle = TextStyle(fontSize = 18.sp),
-            decorationBox = { innerTextField ->
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp)
-                        .border(1.dp, MaterialTheme.colorScheme.primary, MaterialTheme.shapes.small)
-                ) {
-                    if (email.isEmpty()) Text("Email")
-                    innerTextField()
-                }
-            }
+                .padding(vertical = 8.dp)
+                .size(60.dp),
+            textStyle = TextStyle(fontSize = 18.sp, color = Color.White,),
         )
-
-        BasicTextField(
+        TextField(
             value = password,
             onValueChange = { password = it },
+            singleLine = true,
+            label = { Text("Password") },
+            placeholder = { Text("Password") },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            textStyle = TextStyle(fontSize = 18.sp),
+                .padding(vertical = 8.dp)
+                .size(60.dp),
+            textStyle = TextStyle(fontSize = 18.sp, color = Color.White),
             visualTransformation = PasswordVisualTransformation(),
-            decorationBox = { innerTextField ->
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp)
-                        .border(1.dp, MaterialTheme.colorScheme.primary, MaterialTheme.shapes.small)
-                ) {
-                    if (password.isEmpty()) Text("Password")
-                    innerTextField()
-                }
-            }
         )
-
         Button(
             onClick = onLogin,
+            colors = ButtonDefaults.buttonColors(containerColor = Purple40),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
         ) {
-            Text(text = "Login")
+            Text(text = "Login", color = Color.White)
         }
-
         TextButton(onClick = onRegisterNavigate) {
-            Text(text = "Don't have an account? Register")
+            Text(text = "Don't have an account? Register", color = Orange)
         }
     }
 }
@@ -444,92 +440,82 @@ fun RegisterScreen(onRegister: () -> Unit, onBackToLogin: () -> Unit) {
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
 
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Image(
+            painter = painterResource(R.drawable.logo),
+            contentScale = ContentScale.FillWidth,
+            contentDescription = null,
+            alignment = Alignment.TopStart,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(shape = RoundedCornerShape(7.dp))
+        )
         Text(
             text = "Register",
+            color = Color.Yellow,
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.padding(bottom = 24.dp)
         )
-
-        BasicTextField(
+        TextField(
             value = email,
             onValueChange = { email = it },
+            singleLine = true,
+            label = { Text("Email Address") },
+            placeholder = { Text("example@domain.com") },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            textStyle = TextStyle(fontSize = 18.sp),
-            decorationBox = { innerTextField ->
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp)
-                        .border(1.dp, MaterialTheme.colorScheme.primary, MaterialTheme.shapes.small)
-                ) {
-                    if (email.isEmpty()) Text("Email")
-                    innerTextField()
-                }
-            }
+                .padding(vertical = 8.dp)
+                .size(60.dp),
+            textStyle = TextStyle(fontSize = 18.sp, color = Color.White,),
         )
 
-        BasicTextField(
+        TextField(
             value = password,
             onValueChange = { password = it },
+            singleLine = true,
+            label = { Text("Password") },
+            placeholder = { Text("Password") },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            textStyle = TextStyle(fontSize = 18.sp),
+                .padding(vertical = 8.dp)
+                .size(60.dp),
+            textStyle = TextStyle(fontSize = 18.sp, color = Color.White),
             visualTransformation = PasswordVisualTransformation(),
-            decorationBox = { innerTextField ->
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp)
-                        .border(1.dp, MaterialTheme.colorScheme.primary, MaterialTheme.shapes.small)
-                ) {
-                    if (password.isEmpty()) Text("Password")
-                    innerTextField()
-                }
-            }
         )
 
-        BasicTextField(
+        TextField(
             value = confirmPassword,
             onValueChange = { confirmPassword = it },
+            singleLine = true,
+            label = { Text("Password") },
+            placeholder = { Text("Password") },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            textStyle = TextStyle(fontSize = 18.sp),
+                .padding(vertical = 8.dp)
+                .size(60.dp),
+            textStyle = TextStyle(fontSize = 18.sp, color = Color.White),
             visualTransformation = PasswordVisualTransformation(),
-            decorationBox = { innerTextField ->
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp)
-                        .border(1.dp, MaterialTheme.colorScheme.primary, MaterialTheme.shapes.small)
-                ) {
-                    if (confirmPassword.isEmpty()) Text("Confirm Password")
-                    innerTextField()
-                }
-            }
         )
-
         Button(
             onClick = onRegister,
+            colors = ButtonDefaults.buttonColors(containerColor = Purple40),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
         ) {
-            Text(text = "Register")
+            Text(text = "Register", color = Color.White)
         }
 
         TextButton(onClick = onBackToLogin) {
-            Text(text = "Already have an account? Login")
+            Text(text = "Already have an account? Login", color = Orange)
         }
     }
 }
@@ -557,7 +543,7 @@ fun MenuScreen(onQuizSelected: (String) -> Unit, onLogout: () -> Unit) {
             Text(
                 text = "Welcome to Quizzify",
                 style = MaterialTheme.typography.headlineLarge,
-                modifier = Modifier.padding(bottom = 24.dp)
+                modifier = Modifier.padding(bottom = 20.dp)
             )
         }
 
