@@ -46,36 +46,3 @@ class QuizViewModel : ViewModel() {
     }
 }
 
-//class QuizViewModel : ViewModel() {
-//    private val questions = listOf(
-//        Question("What is the capital of France?", listOf("Paris", "Berlin", "Madrid", "Rome"), 0),
-//        Question("What is 2 + 2?", listOf("3", "4", "5", "6"), 1),
-//        Question("Which planet is known as the Red Planet?", listOf("Earth", "Mars", "Jupiter", "Venus"), 1)
-//    )
-//    private var currentIndex = 0
-//
-//    private val _currentQuestion = MutableStateFlow<Question?>(questions[currentIndex])
-//    val currentQuestion: StateFlow<Question?> = _currentQuestion.asStateFlow()
-//
-//    private val _score = MutableStateFlow(0)
-//    val score: StateFlow<Int> = _score.asStateFlow()
-//
-//    fun submitAnswer(selectedIndex: Int) {
-//        if (_currentQuestion.value?.correctAnswerIndex == selectedIndex) {
-//            _score.value += 1
-//        }
-//        currentIndex += 1
-//        if (currentIndex < questions.size) {
-//            _currentQuestion.value = questions[currentIndex]
-//        } else {
-//            _currentQuestion.value = null
-//        }
-//    }
-//
-//    fun restartQuiz() {
-//        currentIndex = 0
-//        _score.value = 0
-//        _currentQuestion.value = questions[currentIndex]
-//    }
-//}
-//
