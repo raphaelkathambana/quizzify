@@ -23,29 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.edufun.quizzify.ui.theme.*
 
-@Composable
-fun BackBar(onMenu: () -> Unit) {
-    val scope = rememberCoroutineScope()
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .background(Purple40),
-
-    ) {
-        IconButton(onClick = onMenu) {
-            Icon(
-                Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Localized description"
-            )
-        }
-        Text(
-            text = "Profile Page",
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(10.dp)
-        )
-    }
-}
-
-
 // List of Questions
 data class quizHistoryDetail(
     val subj: String,
@@ -80,7 +57,7 @@ fun ProfileScreen(name: String, profileImage: Int, onMenu: () -> Unit) {
             .background(MaterialTheme.colorScheme.background)
     ) {
         Column {
-            BackBar(onMenu)
+            ProfileBackButton(onMenu)
 
             // Profile Image
             Column (
@@ -90,8 +67,6 @@ fun ProfileScreen(name: String, profileImage: Int, onMenu: () -> Unit) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
-
-
                 Image(
                     painter = painterResource(id = profileImage),
                     contentDescription = "Profile Picture",
@@ -169,5 +144,30 @@ fun ProfileScreen(name: String, profileImage: Int, onMenu: () -> Unit) {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun ProfileBackButton(onMenu: () -> Unit) {
+    val scope = rememberCoroutineScope()
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .background(Purple40),
+
+        ) {
+        IconButton(
+            onClick = onMenu,
+            modifier = Modifier.align(Alignment.CenterVertically),
+        ) {
+            Icon(
+                Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = "Localized description"
+            )
+        }
+        Text(
+            text = "Profile Page",
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier.padding(12.dp)
+        )
     }
 }
