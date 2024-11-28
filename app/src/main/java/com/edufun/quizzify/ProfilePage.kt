@@ -8,14 +8,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -23,7 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.edufun.quizzify.ui.theme.Purple40
+import com.edufun.quizzify.ui.theme.*
 
 @Composable
 fun BackBar(onMenu: () -> Unit) {
@@ -38,7 +36,6 @@ fun BackBar(onMenu: () -> Unit) {
                 Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Localized description"
             )
-
         }
         Text(
             text = "Profile Page",
@@ -47,9 +44,36 @@ fun BackBar(onMenu: () -> Unit) {
         )
     }
 }
+
+
+// List of Questions
+data class quizHistoryDetail(
+    val subj: String,
+    val result: String
+)
+
+@Composable
+fun allQuizHistory():List<quizHistoryDetail>{
+    return listOf(
+        quizHistoryDetail(
+            "General Knowledge",
+            "80%"
+        ),
+        quizHistoryDetail(
+            "Math Quiz",
+            "78%"
+            ),
+        quizHistoryDetail(
+            "Science Quiz",
+            "72%"
+        ),
+    )
+}
+
 // Profile Page Composable
 @Composable
-fun ProfileScreen(name: String, profileImage: Int, quizHistory: List<String>, onMenu: () -> Unit) {
+fun ProfileScreen(name: String, profileImage: Int, onMenu: () -> Unit) {
+    val quizHistory = allQuizHistory()
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -100,7 +124,7 @@ fun ProfileScreen(name: String, profileImage: Int, quizHistory: List<String>, on
                         fontSize = 20.sp,
                         fontWeight = FontWeight.SemiBold,
                         textAlign = TextAlign.Start,
-                        color = MaterialTheme.colorScheme.primary
+                        color = Orange
                     ),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -114,20 +138,33 @@ fun ProfileScreen(name: String, profileImage: Int, quizHistory: List<String>, on
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(12.dp))
-                        .background(MaterialTheme.colorScheme.surface)
+                        .background(color = Orange.copy(alpha = 0.6f))
                         .padding(16.dp)
                 ) {
-                    quizHistory.forEach { historyItem ->
-                        Text(
-                            text = historyItem,
-                            style = TextStyle(
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Normal,
-                                textAlign = TextAlign.Start,
-                                color = MaterialTheme.colorScheme.onSurface
-                            ),
-                            modifier = Modifier.padding(vertical = 8.dp)
-                        )
+                    quizHistory.forEach { quizHistoryDetail ->
+                        Column {
+                            Text(
+                                text = quizHistoryDetail.subj,
+                                style = TextStyle(
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    textAlign = TextAlign.Start,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                ),
+                                modifier = Modifier.padding(vertical = 8.dp)
+                            )
+                            Text(
+                                text = quizHistoryDetail.result,
+                                style = TextStyle(
+                                    fontSize = 24.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    textAlign = TextAlign.Start,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                ),
+                                modifier = Modifier.padding(vertical = 8.dp)
+                            )
+                            HorizontalDivider(thickness = 2.dp, color = Orange.copy(alpha = 0.6f))
+                        }
                     }
                 }
             }

@@ -73,11 +73,6 @@ fun AppNavigator(viewModel: QuizViewModel = viewModel()) {
             is AppScreen.Profile -> ProfileScreen(
                     name = "John Doe",
                     profileImage = R.drawable.image,
-                    quizHistory = listOf(
-                        "Math Quiz - 80%",
-                        "Science Quiz - 95%",
-                        "History Quiz - 70%"
-                    ),
                 onMenu = { currentScreen = AppScreen.Menu}
 
                 )
