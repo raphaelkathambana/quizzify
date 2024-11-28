@@ -13,6 +13,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
@@ -92,8 +96,78 @@ fun DrawerTab(onQuizSelected: (String) -> Unit, onLogout: () -> Unit, onProfile:
                     }
             ) {
 
+                Column(modifier = Modifier.padding(20.dp)) {
+                    Image(
+                        painter = painterResource(R.drawable.logo),
+                        contentDescription = null,
+                        alignment = Alignment.TopStart,
+                        modifier = Modifier
+                            .wrapContentWidth()
+                            .size(40.dp)
+                            .clip(shape = CircleShape)
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
 
-                Spacer(modifier = Modifier.height(40.dp))
+                    Text(
+                        text = "John Doe!!",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                    )
+                    Text(
+                        text = "@JustMeHopeless",
+                        color = Color.Gray,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+//                                horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row() {
+                            Text(
+                                text = "3",
+                                fontSize = 14.sp,
+                                color = Color.White,
+                                modifier = Modifier
+                            )
+                            Text(
+                                text = " Courses Enrolled",
+                                fontSize = 14.sp,
+                                color = Color.Gray,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(3.dp))
+
+                        Row {
+                            Text(
+                                text = "16",
+                                fontSize = 14.sp,
+                                color = Color.White,
+                                modifier = Modifier
+                            )
+                            Text(
+                                text = " Quizzes done",
+                                fontSize = 14.sp,
+                                color = Color.Gray,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier
+                            )
+                        }
+                    }
+                }
+
+//                Spacer(modifier = Modifier.height(10.dp))
+
+
+                Spacer(modifier = Modifier.height(30.dp))
                 LazyColumn(
                     state = rememberLazyListState(),
                     verticalArrangement = Arrangement.Center,

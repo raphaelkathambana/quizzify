@@ -29,7 +29,7 @@ fun ResultScreen(score: Int, onRestart: () -> Unit) {
             modifier = Modifier.padding(bottom = 32.dp)
         )
         Button(onClick = onRestart, colors = ButtonDefaults.buttonColors(containerColor = Orange)) {
-            Text(text = "Restart Quiz")
+            Text(text = "Return to Home")
         }
     }
 }

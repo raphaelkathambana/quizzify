@@ -2,6 +2,7 @@ package com.edufun.quizzify
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -44,6 +45,17 @@ sealed class AppScreen {
 @Composable
 fun AppNavigator(viewModel: QuizViewModel = viewModel()) {
     var currentScreen by remember { mutableStateOf<AppScreen>(AppScreen.Login) }
+
+    // Handle back button behavior
+    BackHandler(enabled = currentScreen != AppScreen.Login) {
+        when (currentScreen) {
+            is AppScreen.Menu -> currentScreen = AppScreen.Login  // From Menu to Login
+            is AppScreen.Quiz -> currentScreen = AppScreen.Menu    // From Quiz to Menu
+            is AppScreen.Profile -> currentScreen = AppScreen.Menu // From Profile to Menu
+            is AppScreen.Register -> currentScreen = AppScreen.Login // From Register to Login
+            else -> {} // No action on Login, app will exit normally
+        }
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),

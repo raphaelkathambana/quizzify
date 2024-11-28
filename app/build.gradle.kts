@@ -68,5 +68,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.material.icons.extended.android)
+    implementation(libs.androidx.material.icons.extended) // Use latest version
+
+
+
 
 }
