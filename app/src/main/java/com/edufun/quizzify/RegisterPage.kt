@@ -100,7 +100,7 @@ fun RegisterScreen(onRegister: () -> Unit, onBackToLogin: () -> Unit) {
             visualTransformation = PasswordVisualTransformation(),
         )
         Button(
-            onClick = onRegister,
+            onClick = onRegister, // TODO: Add register config
             colors = ButtonDefaults.buttonColors(containerColor = Purple40),
             modifier = Modifier
                 .fillMaxWidth()

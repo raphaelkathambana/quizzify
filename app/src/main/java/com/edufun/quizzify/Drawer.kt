@@ -97,7 +97,7 @@ fun DrawerTab(onQuizSelected: (String) -> Unit, onLogout: () -> Unit, onProfile:
             ) {
 
                 Column(modifier = Modifier.padding(20.dp)) {
-                    Image(
+                    Image( // TODO: Profile Image
                         painter = painterResource(R.drawable.logo),
                         contentDescription = null,
                         alignment = Alignment.TopStart,
@@ -109,13 +109,13 @@ fun DrawerTab(onQuizSelected: (String) -> Unit, onLogout: () -> Unit, onProfile:
                     Spacer(modifier = Modifier.height(6.dp))
 
                     Text(
-                        text = "John Doe!!",
+                        text = "John Doe!!", // TODO
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
                     )
                     Text(
-                        text = "@JustMeHopeless",
+                        text = "@JustMeHopeless", // TODO
                         color = Color.Gray,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -129,7 +129,7 @@ fun DrawerTab(onQuizSelected: (String) -> Unit, onLogout: () -> Unit, onProfile:
                     ) {
                         Row() {
                             Text(
-                                text = "3",
+                                text = "3", // TODO
                                 fontSize = 14.sp,
                                 color = Color.White,
                                 modifier = Modifier
@@ -147,7 +147,7 @@ fun DrawerTab(onQuizSelected: (String) -> Unit, onLogout: () -> Unit, onProfile:
 
                         Row {
                             Text(
-                                text = "16",
+                                text = "16", // TODO
                                 fontSize = 14.sp,
                                 color = Color.White,
                                 modifier = Modifier
@@ -170,7 +170,7 @@ fun DrawerTab(onQuizSelected: (String) -> Unit, onLogout: () -> Unit, onProfile:
                 Spacer(modifier = Modifier.height(30.dp))
                 LazyColumn(
                     state = rememberLazyListState(),
-                    verticalArrangement = Arrangement.Center,
+//                    verticalArrangement = Arrangement.Center,
                     modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight()

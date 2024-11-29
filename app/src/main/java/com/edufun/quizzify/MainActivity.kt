@@ -54,7 +54,7 @@ sealed class AppScreen {
 }
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AppNavigator(viewModel: QuizViewModel = viewModel()) {
+fun AppNavigator(viewModel: QuizzifyViewModel = viewModel()) {
     var currentScreen by remember { mutableStateOf<AppScreen>(AppScreen.Login) }
     var isLoggingOut by remember { mutableStateOf(false) }
     var isLoggingIn by remember { mutableStateOf(false) }

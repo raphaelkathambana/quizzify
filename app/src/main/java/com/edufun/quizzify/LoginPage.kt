@@ -83,7 +83,7 @@ fun LoginScreen(onLogin: () -> Unit, onRegisterNavigate: () -> Unit) {
             visualTransformation = PasswordVisualTransformation(),
         )
         Button(
-            onClick = onLogin,
+            onClick = onLogin, //TODO: Add login configuration
             colors = ButtonDefaults.buttonColors(containerColor = Purple40),
             modifier = Modifier
                 .fillMaxWidth()

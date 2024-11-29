@@ -30,7 +30,10 @@ data class quizHistoryDetail(
 )
 
 @Composable
-fun allQuizHistory():List<quizHistoryDetail>{
+fun allQuizHistory():List<quizHistoryDetail>{ // TODO: Configure Firebase
+   /*
+   * Add allQuizHistory to QuizzifyViewModel.kt
+   * */
     return listOf(
         quizHistoryDetail(
             "General Knowledge",
@@ -68,7 +71,7 @@ fun ProfileScreen(name: String, profileImage: Int, onMenu: () -> Unit) {
                 verticalArrangement = Arrangement.Top
             ) {
                 Image(
-                    painter = painterResource(id = profileImage),
+                    painter = painterResource(id = profileImage), // TODO
                     contentDescription = "Profile Picture",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -81,7 +84,7 @@ fun ProfileScreen(name: String, profileImage: Int, onMenu: () -> Unit) {
 
                 // Name
                 Text(
-                    text = name,
+                    text = name, // TODO
                     style = TextStyle(
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,

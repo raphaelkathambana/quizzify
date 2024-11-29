@@ -9,36 +9,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.edufun.quizzify.ui.theme.Orange
 import com.edufun.quizzify.ui.theme.Purple40
 
-// List of Questions
-data class ListDetail(
-    val pic: Painter,
-    val text: String
-)
-@Composable
-fun allList():List<ListDetail>{
-    return listOf(
-        ListDetail(
-            painterResource(R.drawable.g),
-            "General Knowledge"
-        ),
-        ListDetail(
-            painterResource(R.drawable.m),
-            "Math Quiz",
 
-            ),
-        ListDetail(
-            painterResource(R.drawable.s),
-            "Science Quiz",
-        ),
-    )
-}
 
 // Quiz Screen
 data class Question(
@@ -47,7 +23,7 @@ data class Question(
     val correctAnswerIndex: Int
 )
 @Composable
-fun QuizApp(viewModel: QuizViewModel, onQuitQuiz: () -> Unit) {
+fun QuizApp(viewModel: QuizzifyViewModel, onQuitQuiz: () -> Unit) {
     val question by viewModel.currentQuestion.collectAsState()
     val score by viewModel.score.collectAsState()
     val onAnswerSelected: (Int) -> Unit

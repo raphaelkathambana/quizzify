@@ -1,7 +1,6 @@
 package com.edufun.quizzify
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,10 +20,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.edufun.quizzify.ui.theme.*
 
+
 // Menu
 @Composable
 fun MenuScreen(onQuizSelected: (String) -> Unit) {
-    val allList = allList()
+
+    val allList = QuizzifyViewModel().allList()
+
     Column(
         modifier = Modifier
             .fillMaxSize(),

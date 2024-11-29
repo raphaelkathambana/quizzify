@@ -1,13 +1,41 @@
 package com.edufun.quizzify
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 
-class QuizViewModel : ViewModel() {
-    private val quizzes: Map<String, List<Question>> = mapOf(
+class QuizzifyViewModel : ViewModel() {
+    // Menu View Model
+    data class ListDetail(
+        val pic: Painter,
+        val text: String
+    )
+    @Composable
+    fun allList():List<ListDetail>{ // TODO: Add Configure firebase
+        return listOf(
+            ListDetail(
+                painterResource(R.drawable.g),
+                "General Knowledge"
+            ),
+            ListDetail(
+                painterResource(R.drawable.m),
+                "Math Quiz",
+
+                ),
+            ListDetail(
+                painterResource(R.drawable.s),
+                "Science Quiz",
+            ),
+        )
+    }
+
+    // Question View Model
+    private val quizzes: Map<String, List<Question>> = mapOf( // TODO: Add Configure Firestore
         "General Knowledge" to listOf(
             Question("What is the capital of France?", listOf("Paris", "Berlin", "Madrid", "Rome"), 0),
             Question("Which year did WW2 end?", listOf("1940", "1945", "1950", "1939"), 1)
