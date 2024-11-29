@@ -251,11 +251,10 @@ fun DrawerTab(onQuizSelected: (String) -> Unit, onLogout: () -> Unit, onProfile:
                     },
                     confirmButton = {
                         Button(
-                            onClick = onLogout,
-                            colors = ButtonDefaults.buttonColors(containerColor = Purple40),
+                            onClick = onLogout, // This is now the correct type () -> Unit
+                            colors = ButtonDefaults.buttonColors(containerColor = Purple40)
                         ) {
-
-                            Text("Logout", color = Color.White)
+                            Text("Logout")
                         }
                     },
                     dismissButton = {

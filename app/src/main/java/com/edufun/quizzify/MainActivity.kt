@@ -19,6 +19,12 @@ import com.edufun.quizzify.ui.theme.QuizzifyTheme
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.time.delay
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.rememberCoroutineScope
 
 
 class MainActivity : ComponentActivity() {
@@ -44,11 +50,13 @@ sealed class AppScreen {
     object Login : AppScreen()
     object Register : AppScreen()
     object Profile : AppScreen()
+    object Loading : AppScreen()
 }
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AppNavigator(viewModel: QuizViewModel = viewModel()) {
     var currentScreen by remember { mutableStateOf<AppScreen>(AppScreen.Login) }
+    var isLoggingOut by remember { mutableStateOf(false) }
 
     // Handle back button behavior
     BackHandler(enabled = currentScreen != AppScreen.Login) {
@@ -61,67 +69,94 @@ fun AppNavigator(viewModel: QuizViewModel = viewModel()) {
         }
     }
 
-    AnimatedContent(
-        targetState = currentScreen,
-        transitionSpec = {
-            if (targetState is AppScreen.Profile && initialState !is AppScreen.Profile) {
-                // Slide in from the right when navigating to Profile
-                slideInHorizontally(
-                    initialOffsetX = { it }, // Start from full width
-                    animationSpec = tween(500) // Animation duration 500ms
-                ) with slideOutHorizontally(
-                    targetOffsetX = { -it / 2 }, // Slide out halfway to the left
-                    animationSpec = tween(500)
-                )
-            }else if (initialState is AppScreen.Profile && targetState != AppScreen.Profile) {
-                // Reverse animation when navigating away from Profile
-                slideInHorizontally(
-                    initialOffsetX = { -it }, // Start from the left
-                    animationSpec = tween(500)
-                ) with slideOutHorizontally(
-                    targetOffsetX = { it }, // Slide out to the right
-                    animationSpec = tween(500)
-                )
-            }else if (targetState is AppScreen.Quiz && initialState !is AppScreen.Quiz) {
-                slideInVertically(initialOffsetY = { it }, animationSpec = tween(500)) with
-                        slideOutVertically(targetOffsetY = { it }, animationSpec = tween(500))
-
-            } else {
-                fadeIn(animationSpec = tween(300)) with fadeOut(animationSpec = tween(300))
-            }
+    // If logging out, show the LoadingScreen and delay for the transition
+    if (isLoggingOut) {
+        LoadingScreen() // Show the loading screen
+        LaunchedEffect(Unit) {
+            kotlinx.coroutines.delay(2000) // Simulate logout delay
+            isLoggingOut = false // Set isLoggingOut to false after delay
+            currentScreen = AppScreen.Login // Navigate back to Login screen
         }
-    ) { targetScreen ->
-        // Use `targetScreen` here to display the appropriate screen
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            when (targetScreen) {
-                is AppScreen.Login -> LoginScreen(
-                    onLogin = { currentScreen = AppScreen.Menu },
-                    onRegisterNavigate = { currentScreen = AppScreen.Register }
-                )
-                is AppScreen.Register -> RegisterScreen(
-                    onRegister = { currentScreen = AppScreen.Menu },
-                    onBackToLogin = { currentScreen = AppScreen.Login }
-                )
-                is AppScreen.Menu -> DrawerTab(
-                    onQuizSelected = { quizName ->
-                        viewModel.loadQuiz(quizName)
-                        currentScreen = AppScreen.Quiz
-                    },
-                    onLogout = { currentScreen = AppScreen.Login },
-                    onProfile = { currentScreen = AppScreen.Profile }
-                )
-                is AppScreen.Quiz -> QuizApp(
-                    viewModel = viewModel,
-                    onQuitQuiz = { currentScreen = AppScreen.Menu }
-                )
-                is AppScreen.Profile -> ProfileScreen(
-                    name = "John Doe",
-                    profileImage = R.drawable.image,
-                    onMenu = { currentScreen = AppScreen.Menu }
-                )
+    } else {
+
+        AnimatedContent(
+            targetState = currentScreen,
+            transitionSpec = {
+                if (targetState is AppScreen.Profile && initialState !is AppScreen.Profile) {
+                    // Slide in from the right when navigating to Profile
+                    slideInHorizontally(
+                        initialOffsetX = { it }, // Start from full width
+                        animationSpec = tween(500) // Animation duration 500ms
+                    ) with slideOutHorizontally(
+                        targetOffsetX = { -it / 2 }, // Slide out halfway to the left
+                        animationSpec = tween(500)
+                    )
+                } else if (initialState is AppScreen.Profile && targetState != AppScreen.Profile) {
+                    // Reverse animation when navigating away from Profile
+                    slideInHorizontally(
+                        initialOffsetX = { -it }, // Start from the left
+                        animationSpec = tween(500)
+                    ) with slideOutHorizontally(
+                        targetOffsetX = { it }, // Slide out to the right
+                        animationSpec = tween(500)
+                    )
+                } else if (targetState is AppScreen.Quiz && initialState !is AppScreen.Quiz) {
+                    slideInVertically(initialOffsetY = { it }, animationSpec = tween(500)) with
+                            slideOutVertically(targetOffsetY = { it }, animationSpec = tween(500))
+
+                } else if (initialState is AppScreen.Loading && targetState is AppScreen.Login) {
+                    fadeIn(animationSpec = tween(500)) with fadeOut(animationSpec = tween(500))
+                } else if (initialState is AppScreen.Menu && targetState is AppScreen.Loading) {
+                    // Animation for Menu to Loading transition
+                    fadeIn(animationSpec = tween(500)) with fadeOut(animationSpec = tween(500))
+                } else if (initialState is AppScreen.Loading && targetState != AppScreen.Loading) {
+                    // Fade out Loading screen and fade into the next
+                    fadeIn(animationSpec = tween(500)) with fadeOut(animationSpec = tween(500))
+
+                } else {
+                    fadeIn(animationSpec = tween(300)) with fadeOut(animationSpec = tween(300))
+                }
+            }
+        ) { targetScreen ->
+            // Use `targetScreen` here to display the appropriate screen
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.background
+
+            ) {
+                when (targetScreen) {
+                    is AppScreen.Login -> LoginScreen(
+                        onLogin = { currentScreen = AppScreen.Menu },
+                        onRegisterNavigate = { currentScreen = AppScreen.Register }
+                    )
+
+                    is AppScreen.Register -> RegisterScreen(
+                        onRegister = { currentScreen = AppScreen.Menu },
+                        onBackToLogin = { currentScreen = AppScreen.Login }
+                    )
+
+                    is AppScreen.Menu -> DrawerTab(
+                        onQuizSelected = { quizName ->
+                            viewModel.loadQuiz(quizName)
+                            currentScreen = AppScreen.Quiz
+                        },
+                        onLogout = { isLoggingOut = true },
+                        onProfile = { currentScreen = AppScreen.Profile }
+                    )
+
+                    is AppScreen.Quiz -> QuizApp(
+                        viewModel = viewModel,
+                        onQuitQuiz = { currentScreen = AppScreen.Menu }
+                    )
+
+                    is AppScreen.Profile -> ProfileScreen(
+                        name = "John Doe",
+                        profileImage = R.drawable.image,
+                        onMenu = { currentScreen = AppScreen.Menu }
+                    )
+
+                    is AppScreen.Loading -> LoadingScreen()
+                }
             }
         }
     }
