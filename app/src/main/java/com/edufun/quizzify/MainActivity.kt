@@ -57,6 +57,7 @@ sealed class AppScreen {
 fun AppNavigator(viewModel: QuizViewModel = viewModel()) {
     var currentScreen by remember { mutableStateOf<AppScreen>(AppScreen.Login) }
     var isLoggingOut by remember { mutableStateOf(false) }
+    var isLoggingIn by remember { mutableStateOf(false) }
 
     // Handle back button behavior
     BackHandler(enabled = currentScreen != AppScreen.Login) {
@@ -73,9 +74,17 @@ fun AppNavigator(viewModel: QuizViewModel = viewModel()) {
     if (isLoggingOut) {
         LoadingScreen() // Show the loading screen
         LaunchedEffect(Unit) {
-            kotlinx.coroutines.delay(2000) // Simulate logout delay
+            kotlinx.coroutines.delay(1500) // Simulate logout delay
             isLoggingOut = false // Set isLoggingOut to false after delay
             currentScreen = AppScreen.Login // Navigate back to Login screen
+        }
+
+    } else if (isLoggingIn) {
+        LoadingScreen() // Show the loading screen
+        LaunchedEffect(Unit) {
+            kotlinx.coroutines.delay(1500) // Simulate logout delay
+            isLoggingIn = false // Set isLoggingOut to false after delay
+            currentScreen = AppScreen.Menu // Navigate back to Menu screen
         }
     } else {
 
@@ -113,6 +122,12 @@ fun AppNavigator(viewModel: QuizViewModel = viewModel()) {
                     // Fade out Loading screen and fade into the next
                     fadeIn(animationSpec = tween(500)) with fadeOut(animationSpec = tween(500))
 
+                } else if (initialState is AppScreen.Login && targetState is AppScreen.Loading) {
+                    slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(500)) with slideOutHorizontally(targetOffsetX = { -it / 2 }, animationSpec = tween(500))
+                } else if (initialState is AppScreen.Loading && targetState is AppScreen.Menu) {
+                    slideInVertically(initialOffsetY = { it }, animationSpec = tween(500)) with
+                            fadeOut(animationSpec = tween(500))
+
                 } else {
                     fadeIn(animationSpec = tween(300)) with fadeOut(animationSpec = tween(300))
                 }
@@ -126,7 +141,7 @@ fun AppNavigator(viewModel: QuizViewModel = viewModel()) {
             ) {
                 when (targetScreen) {
                     is AppScreen.Login -> LoginScreen(
-                        onLogin = { currentScreen = AppScreen.Menu },
+                        onLogin = { isLoggingIn = true },
                         onRegisterNavigate = { currentScreen = AppScreen.Register }
                     )
 

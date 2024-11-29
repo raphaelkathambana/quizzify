@@ -58,7 +58,7 @@ fun LoadingScreen() {
                 color = if (isDarkTheme) Color.White else Color.Gray,
                 trackColor = if (isDarkTheme) Color.DarkGray else Color.LightGray,
                 modifier = Modifier
-                    .width(120.dp)
+                    .width(160.dp)
                     .height(8.dp)
             )
         }
