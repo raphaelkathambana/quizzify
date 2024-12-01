@@ -28,6 +28,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import com.edufun.quizzify.quizFunctions.QuizViewModel
 import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.auth.FirebaseAuth
 
 
 class MainActivity : ComponentActivity() {
@@ -35,13 +36,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this) // Ensures Firebase is initialized
         FirebaseFirestore.setLoggingEnabled(true) // Optional: Debug Firestore queries
+//        FirebaseAuth.getInstance()
         setContent {
             QuizzifyTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = Color.Black
                 ) {
-                    AppNavigator()
+                    AppNavigator(FirebaseAuth.getInstance())
                 }
             }
         }
@@ -59,7 +61,7 @@ sealed class AppScreen {
 }
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AppNavigator(viewModel: QuizViewModel = viewModel()) {
+fun AppNavigator(auth: FirebaseAuth, viewModel: QuizViewModel = viewModel()) {
     var currentScreen by remember { mutableStateOf<AppScreen>(AppScreen.Login) }
     var isLoggingOut by remember { mutableStateOf(false) }
     var isLoggingIn by remember { mutableStateOf(false) }
@@ -142,15 +144,17 @@ fun AppNavigator(viewModel: QuizViewModel = viewModel()) {
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background
-
+// TODO: ADD AUTH
             ) {
                 when (targetScreen) {
                     is AppScreen.Login -> LoginScreen(
+                        auth,
                         onLogin = { isLoggingIn = true },
                         onRegisterNavigate = { currentScreen = AppScreen.Register }
                     )
 
                     is AppScreen.Register -> RegisterScreen(
+                        auth,
                         onRegister = { currentScreen = AppScreen.Menu },
                         onBackToLogin = { currentScreen = AppScreen.Login }
                     )

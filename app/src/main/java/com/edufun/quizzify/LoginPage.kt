@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -23,14 +24,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.edufun.quizzify.authFunctions.AuthFunctions
 import com.edufun.quizzify.ui.theme.*
+import com.google.firebase.auth.FirebaseAuth
 
 // Login Screen
 @Composable
-fun LoginScreen(onLogin: () -> Unit, onRegisterNavigate: () -> Unit) {
+fun LoginScreen(auth: FirebaseAuth, onLogin: () -> Unit, onRegisterNavigate: () -> Unit) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -68,6 +72,7 @@ fun LoginScreen(onLogin: () -> Unit, onRegisterNavigate: () -> Unit) {
                 .padding(vertical = 8.dp)
                 .size(60.dp),
             textStyle = TextStyle(fontSize = 18.sp, color = Color.White,),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
         )
         TextField(
             value = password,
@@ -81,9 +86,11 @@ fun LoginScreen(onLogin: () -> Unit, onRegisterNavigate: () -> Unit) {
                 .size(60.dp),
             textStyle = TextStyle(fontSize = 18.sp, color = Color.White),
             visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
         )
         Button(
-            onClick = onLogin, //TODO: Add login configuration
+//            onClick = onLogin, //TODO: Add login configuration
+            onClick = { AuthFunctions().loginUser(auth, email, password, onLogin) },
             colors = ButtonDefaults.buttonColors(containerColor = Purple40),
             modifier = Modifier
                 .fillMaxWidth()
