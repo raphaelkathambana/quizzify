@@ -10,6 +10,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,40 +25,30 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.edufun.quizzify.quizFunctions.QuizViewModel
 import com.edufun.quizzify.ui.theme.*
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-
-// List of Questions
-data class quizHistoryDetail(
-    val subj: String,
-    val result: String
-)
-
-@Composable
-fun allQuizHistory():List<quizHistoryDetail>{ // TODO: Configure Firebase
-    return listOf(
-        quizHistoryDetail(
-            "General Knowledge",
-            "80%"
-        ),
-        quizHistoryDetail(
-            "Math Quiz",
-            "78%"
-            ),
-        quizHistoryDetail(
-            "Science Quiz",
-            "72%"
-        ),
-    )
-}
 
 // Profile Page Composable
 @Composable
-fun ProfileScreen(current: FirebaseUser?, profileImage: Int, onMenu: () -> Unit) {
-    val quizHistory = allQuizHistory()
-    val name = current?.displayName
-    val email = current?.email
+fun ProfileScreen(
+    viewModel: QuizViewModel,
+    current: FirebaseUser?,
+    profileImage: Int,
+    onMenu: () -> Unit
+) {
+    // State to hold stats
+    val stats = remember { mutableStateOf<Map<String, Any?>>(emptyMap()) }
+
+    // Fetch user stats
+    LaunchedEffect(Unit) {
+        stats.value = viewModel.statsRepository.getUserStats()
+    }
+
+    // Extract data from stats
+    val quizzesDone = stats.value["quizzesDone"] as? List<Map<String, Any>> ?: emptyList()
+    val name = current?.displayName ?: "Unknown User"
+    val email = current?.email ?: "No email provided"
 
     Surface(
         modifier = Modifier
@@ -64,16 +58,17 @@ fun ProfileScreen(current: FirebaseUser?, profileImage: Int, onMenu: () -> Unit)
         Column {
             ProfileBackButton(onMenu)
 
-            // Profile Image
-            Column (
+            // Profile Image and Details
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
+                // Profile Image
                 Image(
-                    painter = painterResource(id = profileImage), // TODO
+                    painter = painterResource(id = profileImage),
                     contentDescription = "Profile Picture",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -84,35 +79,31 @@ fun ProfileScreen(current: FirebaseUser?, profileImage: Int, onMenu: () -> Unit)
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Name
-                name?.let {
-                    Text(
-                        text = it, // TODO
-                        style = TextStyle(
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
+                // Name and Email
+                Text(
+                    text = name,
+                    style = TextStyle(
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
-                }
-                email?.let {
-                    Text(
-                        text = it, // TODO
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Light,
-                            textAlign = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
+                )
+                Text(
+                    text = email,
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Light,
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
-                }
+                )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Quiz History Section
                 Text(
-                    text = "Quiz Results History",
+                    text = "Quizzes Done: ${quizzesDone.size}",
                     style = TextStyle(
                         fontSize = 20.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -134,30 +125,14 @@ fun ProfileScreen(current: FirebaseUser?, profileImage: Int, onMenu: () -> Unit)
                         .background(color = Orange.copy(alpha = 0.6f))
                         .padding(16.dp)
                 ) {
-                    quizHistory.forEach { quizHistoryDetail ->
-                        Column {
-                            Text(
-                                text = quizHistoryDetail.subj,
-                                style = TextStyle(
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.Normal,
-                                    textAlign = TextAlign.Start,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                ),
-                                modifier = Modifier.padding(vertical = 8.dp)
+                    quizzesDone.forEach { quiz ->
+                        Text(
+                            text = "${quiz["quizName"]}: ${quiz["lastScore"]}%",
+                            style = TextStyle(
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Normal
                             )
-                            Text(
-                                text = quizHistoryDetail.result,
-                                style = TextStyle(
-                                    fontSize = 24.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    textAlign = TextAlign.Start,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                ),
-                                modifier = Modifier.padding(vertical = 8.dp)
-                            )
-                            HorizontalDivider(thickness = 2.dp, color = Orange.copy(alpha = 0.6f))
-                        }
+                        )
                     }
                 }
             }
@@ -165,17 +140,18 @@ fun ProfileScreen(current: FirebaseUser?, profileImage: Int, onMenu: () -> Unit)
     }
 }
 
+
+
 @Composable
 fun ProfileBackButton(onMenu: () -> Unit) {
-    val scope = rememberCoroutineScope()
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .background(Purple40),
-
-        ) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Purple40)
+    ) {
         IconButton(
             onClick = onMenu,
-            modifier = Modifier.align(Alignment.CenterVertically),
+            modifier = Modifier.align(Alignment.CenterVertically)
         ) {
             Icon(
                 Icons.AutoMirrored.Filled.ArrowBack,

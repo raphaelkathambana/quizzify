@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 class QuizViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = FirebaseRepository()
+    val statsRepository = UserStatsRepository()
 
     private val _quizzes = MutableStateFlow<List<Quiz>>(emptyList())
     val quizzes: StateFlow<List<Quiz>> = _quizzes
@@ -55,6 +56,14 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
         }
         currentIndex += 1
         _currentQuestion.value = _currentQuiz.value?.questions?.getOrNull(currentIndex)
+    }
+    fun saveQuizResult() {
+        val quizName = _currentQuiz.value?.name ?: return
+        val finalScore = score.value
+
+        viewModelScope.launch {
+            statsRepository.updateQuizResult(quizName, finalScore)
+        }
     }
 }
 

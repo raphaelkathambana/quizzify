@@ -1,6 +1,7 @@
 package com.edufun.quizzify
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -19,12 +20,6 @@ import com.edufun.quizzify.ui.theme.QuizzifyTheme
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.time.delay
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import androidx.compose.runtime.rememberCoroutineScope
 import com.edufun.quizzify.quizFunctions.QuizViewModel
 import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.FirebaseFirestore
@@ -66,6 +61,8 @@ fun AppNavigator(auth: FirebaseAuth, viewModel: QuizViewModel = viewModel()) {
     var isLoggingOut by remember { mutableStateOf(false) }
     var isLoggingIn by remember { mutableStateOf(false) }
     var currentUser = FirebaseAuth.getInstance().currentUser
+
+    Log.d("Main Activity Current User ID", currentUser?.uid.toString())
 
     // Handle back button behavior
     BackHandler(enabled = currentScreen != AppScreen.Login) {
@@ -177,6 +174,7 @@ fun AppNavigator(auth: FirebaseAuth, viewModel: QuizViewModel = viewModel()) {
                     )
 
                     is AppScreen.Profile -> ProfileScreen(
+                        viewModel = viewModel,
                         current = currentUser,
                         profileImage = R.drawable.image,
                         onMenu = { currentScreen = AppScreen.Menu }

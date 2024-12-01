@@ -88,7 +88,9 @@ fun QuizApp(viewModel: QuizViewModel, onQuitQuiz: () -> Unit) {
         LaunchedEffect(Unit) {
             println("DEBUG: currentQuestion is null, navigating to results screen")
         }
+        viewModel.saveQuizResult()
         ResultScreen(score = score, onRestart = onQuitQuiz)
+
     }
 }
 

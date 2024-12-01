@@ -88,15 +88,22 @@ fun DrawerTab(
     val quizzes by viewModel.quizzes.collectAsState()
     val loading by viewModel.loading.collectAsState()
 
-    val name = current?.displayName
+    // State for stats
+    val stats = remember { mutableStateOf<Map<String, Any?>>(emptyMap()) }
 
+    // Fetch user stats
+    LaunchedEffect(Unit) {
+        stats.value = viewModel.statsRepository.getUserStats()
+    }
+
+    val totalQuizzesDone = stats.value["totalQuizzesDone"] as? Long ?: 0
+    val name = current?.displayName ?: "Unknown User"
 
     ModalNavigationDrawer(
         drawerContent = {
             ModalDrawerSheet(
                 drawerContainerColor = Color.Black,
                 drawerTonalElevation = Dp.Hairline,
-
                 modifier = Modifier
                     .width(dockerWidth.dp)
                     .drawWithContent {
@@ -111,7 +118,7 @@ fun DrawerTab(
             ) {
 
                 Column(modifier = Modifier.padding(20.dp)) {
-                    Image( // TODO: Profile Image
+                    Image(
                         painter = painterResource(R.drawable.logo),
                         contentDescription = null,
                         alignment = Alignment.TopStart,
@@ -122,79 +129,42 @@ fun DrawerTab(
                     )
                     Spacer(modifier = Modifier.height(6.dp))
 
-                    name?.let {
-                        Text(
-                            text = it, // TODO
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp,
-                        )
-                    }
-//                    Text(
-//                        text = "@JustMeHopeless", // TODO
-//                        color = Color.Gray,
-//                        maxLines = 1,
-//                        overflow = TextOverflow.Ellipsis,
-//                        modifier = Modifier
-//                    )
+                    Text(
+                        text = name,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
+                    )
                     Spacer(modifier = Modifier.height(6.dp))
 
                     Column(
-                        modifier = Modifier.fillMaxWidth(),
-//                                horizontalArrangement = Arrangement.SpaceBetween
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        Row() {
-                            Text(
-                                text = "3", // TODO
-                                fontSize = 14.sp,
-                                color = Color.White,
-                                modifier = Modifier
-                            )
-                            Text(
-                                text = " Courses Enrolled",
-                                fontSize = 14.sp,
-                                color = Color.Gray,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier
-                            )
-                        }
-                        Spacer(modifier = Modifier.width(3.dp))
-
                         Row {
                             Text(
-                                text = "16", // TODO
+                                text = "$totalQuizzesDone",
                                 fontSize = 14.sp,
-                                color = Color.White,
-                                modifier = Modifier
+                                color = Color.White
                             )
                             Text(
-                                text = " Quizzes done",
+                                text = " Quizzes Done",
                                 fontSize = 14.sp,
                                 color = Color.Gray,
                                 maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier
+                                overflow = TextOverflow.Ellipsis
                             )
                         }
                     }
                 }
 
-//                Spacer(modifier = Modifier.height(10.dp))
-
-
                 Spacer(modifier = Modifier.height(30.dp))
                 LazyColumn(
                     state = rememberLazyListState(),
-//                    verticalArrangement = Arrangement.Center,
                     modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight()
                         .padding(20.dp)
-
-
                 ) {
-
                     item {
                         TextButton(
                             onClick = onProfile,
@@ -223,7 +193,6 @@ fun DrawerTab(
                     item {
                         TextButton(
                             onClick = { showDialog = true }
-//                            onClick = onLogout,
                         ) {
                             Row {
                                 Icon(
@@ -232,7 +201,8 @@ fun DrawerTab(
                                     contentDescription = null,
                                 )
                                 Text(
-                                    text = "Logout", color = Color.White,
+                                    text = "Logout",
+                                    color = Color.White,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 20.sp,
                                     maxLines = 1,
@@ -243,7 +213,6 @@ fun DrawerTab(
                                 )
                             }
                         }
-
                     }
                 }
             }
