@@ -25,6 +25,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.edufun.quizzify.quizFunctions.QuizViewModel
 import com.edufun.quizzify.ui.theme.*
 import kotlinx.coroutines.launch
 
@@ -72,10 +74,17 @@ fun AppBar(drawerState: DrawerState, modifier: Modifier = Modifier) {
 
 // Drawer
 @Composable
-fun DrawerTab(onQuizSelected: (String) -> Unit, onLogout: () -> Unit, onProfile: () -> Unit) {
+fun DrawerTab(
+    onQuizSelected: (String) -> Unit,
+    onLogout: () -> Unit,
+    onProfile: () -> Unit
+) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val dockerWidth = LocalConfiguration.current.screenWidthDp * 0.75
     var showDialog by remember { mutableStateOf(false) }
+    val viewModel: QuizViewModel = viewModel()
+    val quizzes by viewModel.quizzes.collectAsState()
+    val loading by viewModel.loading.collectAsState()
 
     ModalNavigationDrawer(
         drawerContent = {
@@ -236,9 +245,17 @@ fun DrawerTab(onQuizSelected: (String) -> Unit, onLogout: () -> Unit, onProfile:
     ) {
         Column{
             AppBar(drawerState)
-            MenuScreen(
-                onQuizSelected = onQuizSelected,
-            )
+            if (loading) {
+                LoadingScreen()
+            } else {
+                MenuScreen(
+                    // quizzes = quizzes,
+                    viewModel = viewModel,
+                    onQuizSelected = onQuizSelected,
+                    onProfile = onProfile,
+                    onLogout = onLogout
+                )
+            }
             // AlertDialog
             if (showDialog) {
                 AlertDialog(

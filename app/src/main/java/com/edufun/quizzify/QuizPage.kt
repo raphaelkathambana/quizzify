@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.edufun.quizzify.quizFunctions.QuizViewModel
 import com.edufun.quizzify.ui.theme.Orange
 import com.edufun.quizzify.ui.theme.Purple40
 
@@ -23,70 +24,64 @@ data class Question(
     val correctAnswerIndex: Int
 )
 @Composable
-fun QuizApp(viewModel: QuizzifyViewModel, onQuitQuiz: () -> Unit) {
-    val question by viewModel.currentQuestion.collectAsState()
+fun QuizApp(viewModel: QuizViewModel, onQuitQuiz: () -> Unit) {
+    val currentQuestion by viewModel.currentQuestion.collectAsState()
     val score by viewModel.score.collectAsState()
-    val onAnswerSelected: (Int) -> Unit
 
-    if (question != null) {
-        onAnswerSelected = { selected -> viewModel.submitAnswer(selected) }
+    if (currentQuestion != null) {
         Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .padding(16.dp)
         ) {
-            Column {
-                BackButton(onQuitQuiz)
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = question!!.questionText,
-                        style = MaterialTheme.typography.headlineMedium,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(bottom = 32.dp, top = 80.dp)
-                    )
-                    Column(verticalArrangement = Arrangement.SpaceBetween) {
-                        question!!.options.forEachIndexed { index, option ->
-                            Button(
-                                onClick = { onAnswerSelected(index) },
-                                colors = ButtonDefaults.buttonColors(containerColor = Orange),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 8.dp)
-                            ) {
-                                Text(text = option)
-                            }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = currentQuestion!!.questionText,
+                    style = MaterialTheme.typography.headlineMedium,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(bottom = 32.dp)
+                )
+
+                Column(verticalArrangement = Arrangement.SpaceBetween) {
+                    currentQuestion!!.options.forEachIndexed { index, option ->
+                        Button(
+                            onClick = { viewModel.submitAnswer(index) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp)
+                        ) {
+                            Text(text = option)
                         }
                     }
+                }
 
-                    Text(
-                        text = "Score: $score",
-                        style = MaterialTheme.typography.bodyMedium,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(top = 32.dp)
-                    )
-//                    Button(
-//                        onClick = onQuitQuiz,
-//                        colors = ButtonDefaults.buttonColors(containerColor = Orange),
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(vertical = 16.dp)
-//                    ) {
-//                        Text(text = "Quit Quiz")
-//                    }
+                Text(
+                    text = "Score: $score",
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = 32.dp)
+                )
+                Button(
+                    onClick = onQuitQuiz,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp)
+                ) {
+                    Text("Quit Quiz")
                 }
             }
         }
     } else {
-        ResultScreen(score = score, onRestart = { onQuitQuiz() })
+        // Debugging log to identify the state
+        LaunchedEffect(Unit) {
+            println("DEBUG: currentQuestion is null, navigating to results screen")
+        }
+        ResultScreen(score = score, onRestart = onQuitQuiz)
     }
 }
-
 
 @Composable
 fun BackButton(onQuitQuiz: () -> Unit) {

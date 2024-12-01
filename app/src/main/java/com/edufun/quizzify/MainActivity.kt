@@ -25,11 +25,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.rememberCoroutineScope
+import com.edufun.quizzify.quizFunctions.QuizViewModel
+import com.google.firebase.FirebaseApp
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseApp.initializeApp(this) // Ensures Firebase is initialized
+        FirebaseFirestore.setLoggingEnabled(true) // Optional: Debug Firestore queries
         setContent {
             QuizzifyTheme {
                 Surface(
@@ -54,7 +59,7 @@ sealed class AppScreen {
 }
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AppNavigator(viewModel: QuizzifyViewModel = viewModel()) {
+fun AppNavigator(viewModel: QuizViewModel = viewModel()) {
     var currentScreen by remember { mutableStateOf<AppScreen>(AppScreen.Login) }
     var isLoggingOut by remember { mutableStateOf(false) }
     var isLoggingIn by remember { mutableStateOf(false) }
@@ -152,8 +157,9 @@ fun AppNavigator(viewModel: QuizzifyViewModel = viewModel()) {
 
                     is AppScreen.Menu -> DrawerTab(
                         onQuizSelected = { quizName ->
-                            viewModel.loadQuiz(quizName)
-                            currentScreen = AppScreen.Quiz
+                            viewModel.selectQuiz(quizName) // Select the quiz
+                            currentScreen = AppScreen.Quiz // Navigate to quiz screen
+                            println("DEBUG: Navigating to Quiz screen for - $quizName")
                         },
                         onLogout = { isLoggingOut = true },
                         onProfile = { currentScreen = AppScreen.Profile }

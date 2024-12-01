@@ -31,9 +31,6 @@ data class quizHistoryDetail(
 
 @Composable
 fun allQuizHistory():List<quizHistoryDetail>{ // TODO: Configure Firebase
-   /*
-   * Add allQuizHistory to QuizzifyViewModel.kt
-   * */
     return listOf(
         quizHistoryDetail(
             "General Knowledge",
