@@ -52,8 +52,9 @@ fun LoginScreen(auth: FirebaseAuth, onLogin: () -> Unit, onRegisterNavigate: () 
             contentDescription = null,
             alignment = Alignment.TopStart,
             modifier = Modifier
-                .fillMaxWidth()
+//                .fillMaxWidth()
                 .clip(shape = RoundedCornerShape(7.dp))
+                .size(250.dp)
         )
         Text(
             text = "Login",

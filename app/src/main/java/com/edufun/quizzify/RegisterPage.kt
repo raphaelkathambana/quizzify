@@ -35,6 +35,7 @@ import com.google.firebase.auth.FirebaseAuth
 // Register Screen
 @Composable
 fun RegisterScreen(auth: FirebaseAuth, onRegister: () -> Unit, onBackToLogin: () -> Unit) {
+    var displayName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -54,14 +55,27 @@ fun RegisterScreen(auth: FirebaseAuth, onRegister: () -> Unit, onBackToLogin: ()
             contentDescription = null,
             alignment = Alignment.TopStart,
             modifier = Modifier
-                .fillMaxWidth()
+//                .fillMaxWidth()
                 .clip(shape = RoundedCornerShape(7.dp))
+                .size(250.dp)
         )
         Text(
             text = "Register",
             color = Color.Yellow,
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.padding(bottom = 24.dp)
+        )
+        TextField(
+            value = displayName,
+            onValueChange = { displayName = it },
+            singleLine = true,
+            label = { Text("Display Name") },
+            placeholder = { Text("John Doe") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+                .size(60.dp),
+            textStyle = TextStyle(fontSize = 18.sp, color = Color.White,),
         )
         TextField(
             value = email,
@@ -76,7 +90,6 @@ fun RegisterScreen(auth: FirebaseAuth, onRegister: () -> Unit, onBackToLogin: ()
             textStyle = TextStyle(fontSize = 18.sp, color = Color.White,),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
         )
-
         TextField(
             value = password,
             onValueChange = { password = it },
@@ -96,8 +109,8 @@ fun RegisterScreen(auth: FirebaseAuth, onRegister: () -> Unit, onBackToLogin: ()
             value = confirmPassword,
             onValueChange = { confirmPassword = it },
             singleLine = true,
-            label = { Text("Password") },
-            placeholder = { Text("Password") },
+            label = { Text("Confirm Password") },
+            placeholder = { Text("Confirm Password") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
@@ -108,7 +121,7 @@ fun RegisterScreen(auth: FirebaseAuth, onRegister: () -> Unit, onBackToLogin: ()
         )
         Button(
 //            onClick = onRegister, // TODO: Add register config
-            onClick = { AuthFunctions().registerUser(auth, email, password, confirmPassword, onBackToLogin) },
+            onClick = { AuthFunctions().registerUser(auth, email, password, confirmPassword, displayName, onBackToLogin) },
             colors = ButtonDefaults.buttonColors(containerColor = Purple40),
             modifier = Modifier
                 .fillMaxWidth()

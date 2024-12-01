@@ -22,6 +22,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.edufun.quizzify.ui.theme.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 // List of Questions
 data class quizHistoryDetail(
@@ -49,8 +51,11 @@ fun allQuizHistory():List<quizHistoryDetail>{ // TODO: Configure Firebase
 
 // Profile Page Composable
 @Composable
-fun ProfileScreen(name: String, profileImage: Int, onMenu: () -> Unit) {
+fun ProfileScreen(current: FirebaseUser?, profileImage: Int, onMenu: () -> Unit) {
     val quizHistory = allQuizHistory()
+    val name = current?.displayName
+    val email = current?.email
+
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -80,15 +85,28 @@ fun ProfileScreen(name: String, profileImage: Int, onMenu: () -> Unit) {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Name
-                Text(
-                    text = name, // TODO
-                    style = TextStyle(
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onBackground
+                name?.let {
+                    Text(
+                        text = it, // TODO
+                        style = TextStyle(
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
                     )
-                )
+                }
+                email?.let {
+                    Text(
+                        text = it, // TODO
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Light,
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(24.dp))
 

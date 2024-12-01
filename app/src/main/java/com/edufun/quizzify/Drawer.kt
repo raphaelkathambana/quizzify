@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.edufun.quizzify.quizFunctions.QuizViewModel
 import com.edufun.quizzify.ui.theme.*
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
 
 // AppBar
@@ -75,6 +76,7 @@ fun AppBar(drawerState: DrawerState, modifier: Modifier = Modifier) {
 // Drawer
 @Composable
 fun DrawerTab(
+    current: FirebaseUser?,
     onQuizSelected: (String) -> Unit,
     onLogout: () -> Unit,
     onProfile: () -> Unit
@@ -85,6 +87,9 @@ fun DrawerTab(
     val viewModel: QuizViewModel = viewModel()
     val quizzes by viewModel.quizzes.collectAsState()
     val loading by viewModel.loading.collectAsState()
+
+    val name = current?.displayName
+
 
     ModalNavigationDrawer(
         drawerContent = {
@@ -112,24 +117,26 @@ fun DrawerTab(
                         alignment = Alignment.TopStart,
                         modifier = Modifier
                             .wrapContentWidth()
-                            .size(40.dp)
+                            .size(50.dp)
                             .clip(shape = CircleShape)
                     )
                     Spacer(modifier = Modifier.height(6.dp))
 
-                    Text(
-                        text = "John Doe!!", // TODO
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier
-                    )
-                    Text(
-                        text = "@JustMeHopeless", // TODO
-                        color = Color.Gray,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier
-                    )
+                    name?.let {
+                        Text(
+                            text = it, // TODO
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp,
+                        )
+                    }
+//                    Text(
+//                        text = "@JustMeHopeless", // TODO
+//                        color = Color.Gray,
+//                        maxLines = 1,
+//                        overflow = TextOverflow.Ellipsis,
+//                        modifier = Modifier
+//                    )
                     Spacer(modifier = Modifier.height(6.dp))
 
                     Column(

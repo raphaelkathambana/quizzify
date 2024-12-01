@@ -28,6 +28,7 @@ fun QuizApp(viewModel: QuizViewModel, onQuitQuiz: () -> Unit) {
     val currentQuestion by viewModel.currentQuestion.collectAsState()
     val score by viewModel.score.collectAsState()
 
+
     if (currentQuestion != null) {
         Surface(
             modifier = Modifier

@@ -65,6 +65,7 @@ fun AppNavigator(auth: FirebaseAuth, viewModel: QuizViewModel = viewModel()) {
     var currentScreen by remember { mutableStateOf<AppScreen>(AppScreen.Login) }
     var isLoggingOut by remember { mutableStateOf(false) }
     var isLoggingIn by remember { mutableStateOf(false) }
+    var currentUser = FirebaseAuth.getInstance().currentUser
 
     // Handle back button behavior
     BackHandler(enabled = currentScreen != AppScreen.Login) {
@@ -160,6 +161,7 @@ fun AppNavigator(auth: FirebaseAuth, viewModel: QuizViewModel = viewModel()) {
                     )
 
                     is AppScreen.Menu -> DrawerTab(
+                        current = currentUser,
                         onQuizSelected = { quizName ->
                             viewModel.selectQuiz(quizName) // Select the quiz
                             currentScreen = AppScreen.Quiz // Navigate to quiz screen
@@ -175,7 +177,7 @@ fun AppNavigator(auth: FirebaseAuth, viewModel: QuizViewModel = viewModel()) {
                     )
 
                     is AppScreen.Profile -> ProfileScreen(
-                        name = "John Doe",
+                        current = currentUser,
                         profileImage = R.drawable.image,
                         onMenu = { currentScreen = AppScreen.Menu }
                     )
