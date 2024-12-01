@@ -67,7 +67,9 @@ fun MenuScreen(
                     Column(modifier = Modifier.padding(vertical = 10.dp)) {
                         Image(
                             painter = painterResource(id = quiz.coverImageResId),
+                            contentScale = ContentScale.FillWidth,
                             contentDescription = null,
+                            alignment = Alignment.TopStart,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(7.dp))
@@ -77,9 +79,11 @@ fun MenuScreen(
                                 onQuizSelected(quiz.name)
                                 println("DEBUG: Selected quiz - ${quiz.name}") // Debug log
                             },
+                            colors = ButtonDefaults.buttonColors(containerColor = Orange),
+                            shape = RoundedCornerShape(topStart = 0.dp, topEnd = 0.dp, bottomEnd = 15.dp, bottomStart = 15.dp),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = 8.dp)
+//                                .padding(top = 8.dp)
                         ) {
                             Text(text = quiz.name)
                         }
