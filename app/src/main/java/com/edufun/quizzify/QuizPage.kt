@@ -32,45 +32,53 @@ fun QuizApp(viewModel: QuizViewModel, onQuitQuiz: () -> Unit) {
         Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .background(MaterialTheme.colorScheme.background)
+//                .padding(16.dp)
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = currentQuestion!!.questionText,
-                    style = MaterialTheme.typography.headlineMedium,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(bottom = 32.dp)
-                )
+            Column {
+                BackButton(onQuitQuiz)
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = currentQuestion!!.questionText,
+                        style = MaterialTheme.typography.headlineMedium,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(bottom = 32.dp, top = 80.dp)
+                    )
 
-                Column(verticalArrangement = Arrangement.SpaceBetween) {
-                    currentQuestion!!.options.forEachIndexed { index, option ->
-                        Button(
-                            onClick = { viewModel.submitAnswer(index) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp)
-                        ) {
-                            Text(text = option)
+                    Column(verticalArrangement = Arrangement.SpaceBetween) {
+                        currentQuestion!!.options.forEachIndexed { index, option ->
+                            Button(
+                                onClick = { viewModel.submitAnswer(index) },
+                                colors = ButtonDefaults.buttonColors(containerColor = Orange),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp)
+                            ) {
+                                Text(text = option)
+                            }
                         }
                     }
-                }
 
-                Text(
-                    text = "Score: $score",
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(top = 32.dp)
-                )
-                Button(
-                    onClick = onQuitQuiz,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp)
-                ) {
-                    Text("Quit Quiz")
+                    Text(
+                        text = "Score: $score",
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(top = 32.dp)
+                    )
+//                    Button(
+//                        onClick = onQuitQuiz,
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .padding(vertical = 16.dp)
+//                    ) {
+//                        Text("Quit Quiz")
+//                    }
                 }
             }
         }
