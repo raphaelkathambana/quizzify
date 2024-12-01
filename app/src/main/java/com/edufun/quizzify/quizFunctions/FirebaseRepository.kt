@@ -17,9 +17,9 @@ class FirebaseRepository {
     }
 
     private val imageNameToResIdMap = mapOf(
-        // "general_knowledge" to R.drawable.g,
+        "general_knowledge" to R.drawable.g,
         "math_quiz" to R.drawable.m,
-        // "science_quiz" to R.drawable.s
+        "science_quiz" to R.drawable.s
     )
 
     /**
